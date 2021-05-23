@@ -4,7 +4,7 @@ const { Schema } = Mongoose;
 
 const bookSchema = Schema(
 	{
-		user: {
+		summarizedBy: {
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: "User",
@@ -17,7 +17,6 @@ const bookSchema = Schema(
 		},
 		genre: { type: String, required: true },
 		summary: { type: String, required: true },
-		summarizedBy: { type: String, required: true },
 	},
 	{ timestamps: true }
 );
