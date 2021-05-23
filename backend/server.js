@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import connectDB from "./config/db.js";
 import bookRoutes from "./routes/book.route.js";
+import userRoutes from "./routes/user.route.js";
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 dotenv.config();
@@ -11,7 +12,11 @@ connectDB();
 
 const app = express();
 
+app.use(express.json());
+
 app.use("/api/books", bookRoutes);
+
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res, next) => {
 	res.send("API running...");
