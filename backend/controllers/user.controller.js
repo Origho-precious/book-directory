@@ -50,3 +50,16 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 		throw new Error("Unprocessible Entity - Some required fields not found!");
 	}
 });
+
+export const getUserDetails = asyncHandler(async (req, res) => {
+	const { id } = req.user;
+
+	const user = await User.findById({ _id: id }).select(["-password", "-__v"]);
+
+	if (user) {
+		res.json({ user });
+	} else {
+		res.status(404);
+		throw new Error("User not found");
+	}
+});
