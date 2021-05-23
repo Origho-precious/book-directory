@@ -19,8 +19,34 @@ export const authenticateUser = asyncHandler(async (req, res) => {
 		throw new Error("Invaild email address");
 	} else if (!user.matchPassword(password)) {
 		res.status(401);
-		throw new Error("invalid password");
+		throw new Error("Incorrect password");
 	}
 });
 
-export const registerUser = asyncHandler(async (req, res, next) => {});
+export const registerUser = asyncHandler(async (req, res, next) => {
+	const { name, email, password } = req.body;
+
+	const userExists = await User.findOne({ email });
+
+	if (userExists) {
+		res.status(400);
+		throw new Error(`User with ${email} already exists`);
+	}
+
+	if (!userExists && password && name) {
+		const newUser = await User.create({ name, email, password });
+
+		res.status(201).json({
+			_id: newUser._id,
+			name: newUser.name,
+			email: newUser.email,
+			token: generateToken(newUser._id),
+		});
+	} else if (!email && !password && !name) {
+		res.status(422);
+		throw new Error("Invalid user details - cannot process null request body");
+	} else if (!name || !email || !password) {
+		res.status(400);
+		throw new Error("Unprocessible Entity - Some required fields not found!");
+	}
+});
