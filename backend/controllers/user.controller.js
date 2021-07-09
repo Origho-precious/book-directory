@@ -29,7 +29,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 	const userExists = await User.findOne({ email });
 
 	if (userExists) {
-		res.status(400);
+		res.status(409);
 		throw new Error(`User with ${email} already exists`);
 	}
 
@@ -43,11 +43,11 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 			token: generateToken(newUser._id),
 		});
 	} else if (!email && !password && !name) {
-		res.status(422);
-		throw new Error("Invalid user details - cannot process null request body");
+		res.status(400);
+		throw new Error("Cannot process null request body");
 	} else if (!name || !email || !password) {
 		res.status(400);
-		throw new Error("Unprocessible Entity - Some required fields not found!");
+		throw new Error("Some required fields not found!");
 	}
 });
 
